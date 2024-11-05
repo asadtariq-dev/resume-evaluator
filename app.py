@@ -19,6 +19,9 @@ def index():
         job_description = request.form["job_description"]
         resume_file = request.files["resume"]
 
+        if not os.path.exists(app.config["UPLOAD_FOLDER"]):
+            os.makedirs(app.config["UPLOAD_FOLDER"])
+
         if resume_file and allowed_file(resume_file.filename):
             filename = secure_filename(resume_file.filename)
             file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
