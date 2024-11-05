@@ -1,6 +1,12 @@
 import spacy
+from spacy.cli import download
 
-nlp = spacy.load("en_core_web_sm")
+# Load the spaCy model; download if not available
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 def extract_skills_from_text(text):
     doc = nlp(text)
@@ -15,7 +21,6 @@ def extract_skills_from_text(text):
 
 def evaluate_resume(resume_text, job_text):
     required_skills = extract_skills_from_text(job_text)
-
     resume_skills = extract_skills_from_text(resume_text)
 
     base_score = 0
@@ -24,7 +29,12 @@ def evaluate_resume(resume_text, job_text):
     matched_skills = set(resume_skills).intersection(set(required_skills))
     base_score = len(matched_skills) / len(required_skills) * 100 if required_skills else 0
 
-    exceptional_criteria = ["team player", "strong communication", "problem solving", "motivated", "lead", "mentor", "advanced", "expert", "senior", "architecture", "design", "performance", "optimization"]
+    exceptional_criteria = [
+        "team player", "strong communication", "problem solving",
+        "motivated", "lead", "mentor", "advanced", "expert",
+        "senior", "architecture", "design", "performance",
+        "optimization"
+    ]
 
     for criterion in exceptional_criteria:
         if criterion in resume_text.lower():
