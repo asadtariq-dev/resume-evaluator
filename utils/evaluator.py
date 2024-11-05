@@ -1,21 +1,9 @@
-import spacy
-from spacy.cli import download
-
-# Load the spaCy model; download if not available
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    download("en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
+import re
 
 def extract_skills_from_text(text):
-    doc = nlp(text)
-
-    skills_keywords = set()
-    for token in doc:
-        # We assume skills are usually nouns or proper nouns
-        if token.pos_ in ["NOUN", "PROPN"] and len(token.text) > 2:
-            skills_keywords.add(token.text)
+    # Use a simple regex to find potential skills (e.g., nouns or proper nouns)
+    # This regex matches words that are at least 3 characters long
+    skills_keywords = set(re.findall(r'\b[A-Z][a-z]*\b|\b[a-z]{3,}\b', text))
 
     return list(skills_keywords)
 
