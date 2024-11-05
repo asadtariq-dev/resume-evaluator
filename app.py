@@ -1,12 +1,13 @@
 from flask import Flask, request, render_template
 from werkzeug.utils import secure_filename
 import os
+import tempfile
 
 from utils.parser import extract_text_from_pdf, extract_text_from_docx, parse_markdown_to_text
 from utils.evaluator import evaluate_resume, generate_evaluation_summary
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = "uploads"
+app.config["UPLOAD_FOLDER"] = tempfile.gettempdir()  # Use the system's temp directory
 
 ALLOWED_EXTENSIONS = {"pdf", "docx"}
 
@@ -18,9 +19,6 @@ def index():
     if request.method == "POST":
         job_description = request.form["job_description"]
         resume_file = request.files["resume"]
-
-        if not os.path.exists(app.config["UPLOAD_FOLDER"]):
-            os.makedirs(app.config["UPLOAD_FOLDER"])
 
         if resume_file and allowed_file(resume_file.filename):
             filename = secure_filename(resume_file.filename)
