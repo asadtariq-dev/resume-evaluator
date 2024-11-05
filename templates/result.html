@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Evaluation Results</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      margin: 10px 0;
+    }
+    strong {
+      color: #007bff;
+    }
+    .score {
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #28a745;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #ffffff;
+      background-color: #007bff;
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="results">
+    <h1>Candidate Evaluation Results</h1>
+
+    <h3>1. Core Skill Alignment</h3>
+    <p>
+      <strong>Base Score:</strong>
+      <span class="score">{{ result.base_score | round(0) }}%</span>
+    </p>
+    <p>This score reflects the proportion of skills from the candidate's resume that match the required skills in the job description.</p>
+
+    <h3>2. Exceptional Attributes</h3>
+    <p>
+      <strong>Exceptional Qualities Score:</strong>
+      <span class="score">{{ result.exceptional_score | round(0) }}%</span>
+    </p>
+    <p>This score indicates the percentage of exceptional qualities identified in the candidate's resume that are advantageous for the role.</p>
+
+    <h3>3. Overall Fit</h3>
+    <p>
+      <strong>Overall Fitness Score:</strong>
+      <span class="score">{{ result.overall_fitness_score | round(0) }}%</span>
+    </p>
+    <p>This cumulative score combines both the base score and exceptional qualities score.</p>
+
+    <h3>Summary Insights</h3>
+    <ul>
+      {% for insight in summary_insights %}
+      <li>{{ insight }}</li>
+      {% endfor %}
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>{{ conclusion }}</p>
+
+    <a href="/">Evaluate Another Resume</a>
+  </div>
+</body>
+</html>
