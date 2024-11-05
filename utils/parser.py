@@ -1,5 +1,5 @@
 import pdfplumber
-import docx
+import mammoth
 import markdown
 
 def extract_text_from_pdf(pdf_path):
@@ -7,8 +7,11 @@ def extract_text_from_pdf(pdf_path):
         return "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
 
 def extract_text_from_docx(docx_path):
-    doc = docx.Document(docx_path)
-    return "\n".join(paragraph.text for paragraph in doc.paragraphs)
+    with open(docx_path, 'rb') as docx_file:
+        result = mammoth.extract_raw_text(docx_file)
+        extracted_text = result.value
+
+        return extracted_text
 
 def parse_markdown_to_text(markdown_text):
     html = markdown.markdown(markdown_text)
