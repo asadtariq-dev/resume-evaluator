@@ -63,14 +63,20 @@
         height: 200px;
         margin-bottom: 20px;
       }
+      #error-message {
+        color: red;
+        display: none;
+        margin-bottom: 20px;
+      }
     </style>
   </head>
   <body>
     <h1>Resume Evaluator</h1>
-    <form method="POST" enctype="multipart/form-data">
+    <form id="evaluation-form" method="POST" enctype="multipart/form-data">
+      <div id="error-message" style="color: red; display: none"></div>
       <div class="editor" id="editor"></div>
       <input type="hidden" name="job_description" id="job_description" />
-      <input type="file" name="resume" required />
+      <input type="file" name="resume" id="resume" required />
       <input type="submit" value="Evaluate Resume" />
     </form>
 
@@ -80,16 +86,35 @@
         theme: "snow",
         modules: {
           toolbar: [
+            [{ header: [1, 2, 3, false] }],
             ["bold", "italic", "underline"],
-            ["link", "image"],
             [{ list: "ordered" }, { list: "bullet" }],
+            ["clean"]
           ],
         },
       });
 
-      document.querySelector("form").onsubmit = function () {
+      document.querySelector("#evaluation-form").onsubmit = function (event) {
         var jobDescription = document.querySelector("#job_description");
         jobDescription.value = JSON.stringify(quill.getContents());
+
+        var resumeInput = document.querySelector(
+          "input[type='file'][name='resume']"
+        );
+        var errorMessageDiv = document.querySelector("#error-message");
+        errorMessageDiv.style.display = "none";
+
+        var jobDescriptionContent = quill.getContents();
+        var isJobDescriptionEmpty =
+          !jobDescriptionContent.ops.length ||
+          (jobDescriptionContent.ops.length === 1 &&
+            jobDescriptionContent.ops[0].insert === "\n");
+
+        if (isJobDescriptionEmpty || !resumeInput.files.length) {
+          event.preventDefault();
+          errorMessageDiv.textContent = "Please provide job description.";
+          errorMessageDiv.style.display = "block";
+        }
       };
     </script>
   </body>

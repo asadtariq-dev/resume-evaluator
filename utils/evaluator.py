@@ -2,7 +2,6 @@ import re
 
 def extract_skills_from_text(text):
     # Use a simple regex to find potential skills (e.g., nouns or proper nouns)
-    # This regex matches words that are at least 3 characters long
     skills_keywords = set(re.findall(r'\b[A-Z][a-z]*\b|\b[a-z]{3,}\b', text))
 
     return list(skills_keywords)
@@ -17,16 +16,21 @@ def evaluate_resume(resume_text, job_text):
     matched_skills = set(resume_skills).intersection(set(required_skills))
     base_score = len(matched_skills) / len(required_skills) * 100 if required_skills else 0
 
-    exceptional_criteria = [
+    exceptional_skills = [
         "team player", "strong communication", "problem solving",
         "motivated", "lead", "mentor", "advanced", "expert",
         "senior", "architecture", "design", "performance",
         "optimization"
     ]
 
-    for criterion in exceptional_criteria:
-        if criterion in resume_text.lower():
+    matched_exceptional_skills = 0
+    for skill in exceptional_skills:
+        if skill in resume_text.lower():
             exceptional_score += 10
+            matched_exceptional_skills += 1
+
+
+    exceptional_score = matched_exceptional_skills / len(exceptional_skills) * 100 if len(exceptional_skills) else 0
 
     overall_fitness_score = base_score + exceptional_score
 
